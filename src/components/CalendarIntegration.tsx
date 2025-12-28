@@ -55,35 +55,48 @@ const CalendarIntegrationInner = () => {
       <button
         onClick={() => setShowModal(true)}
         className="
-          px-4 py-2 text-sm
-          bg-white text-neutral-700
-          border border-neutral-300
-          hover:border-neutral-400
-          transition-colors duration-150
+          px-5 py-3 text-sm
+          glass-card rounded-lg
+          text-dark-400 hover:text-white
+          hover:bg-white/10 hover:scale-105
+          transition-all duration-200
+          font-semibold
+          flex items-center gap-2
         "
       >
-        {isConnected ? '📅 Calendar Connected' : '📅 Connect Calendar'}
+        {isConnected ? (
+          <>
+            <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+            📅 Calendar Connected
+          </>
+        ) : (
+          '📅 Connect Calendar'
+        )}
       </button>
 
       {showModal && (
-        <div className="fixed inset-0 bg-black/20 z-50 flex items-center justify-center p-4">
-          <div className="bg-white w-full max-w-md p-8 shadow-2xl">
-            <h2 className="text-2xl font-bold text-neutral-800 mb-4">
-              Calendar Integration
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
+          <div className="glass-card w-full max-w-md p-8 rounded-2xl shadow-2xl border border-white/20 animate-scaleIn">
+            <h2 className="text-3xl font-bold mb-2">
+              <span className="gradient-text">Calendar Integration</span>
             </h2>
+            <p className="text-dark-500 mb-6">Sync with Google Calendar</p>
             
             {error && (
-              <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 text-sm">
-                {error}
+              <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 text-red-400 text-sm rounded-lg">
+                ⚠️ {error}
               </div>
             )}
 
             {isConnected ? (
               <>
-                <div className="mb-6 p-4 bg-green-50 border border-green-200">
-                  <p className="text-green-700 font-medium mb-2">✓ Connected to Google Calendar</p>
-                  <p className="text-sm text-green-600">
-                    Tasks can now sync with your calendar events.
+                <div className="mb-6 p-5 bg-green-500/10 border border-green-500/30 rounded-xl">
+                  <p className="text-green-400 font-bold mb-2 flex items-center gap-2">
+                    <span className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></span>
+                    Connected to Google Calendar
+                  </p>
+                  <p className="text-sm text-dark-400">
+                    Tasks can now sync with your calendar events. ✨
                   </p>
                 </div>
                 <div className="space-y-3">
@@ -91,10 +104,10 @@ const CalendarIntegrationInner = () => {
                     onClick={handleDisconnect}
                     className="
                       w-full px-6 py-3
-                      bg-white text-red-600 font-medium
-                      border border-red-300
-                      hover:bg-red-50
-                      transition-colors duration-150
+                      glass-card rounded-lg
+                      text-red-400 hover:text-white font-bold
+                      hover:bg-red-500/20
+                      transition-all duration-200
                     "
                   >
                     Disconnect Calendar
@@ -103,9 +116,9 @@ const CalendarIntegrationInner = () => {
                     onClick={() => setShowModal(false)}
                     className="
                       w-full px-6 py-3
-                      text-neutral-600
-                      hover:text-neutral-800
-                      transition-colors duration-150
+                      text-dark-500 hover:text-white
+                      transition-colors duration-200
+                      font-semibold
                     "
                   >
                     Close
@@ -114,28 +127,52 @@ const CalendarIntegrationInner = () => {
               </>
             ) : (
               <>
-                <p className="text-neutral-600 mb-6">
+                <p className="text-dark-400 mb-4">
                   Connect your calendar to automatically:
                 </p>
-                <ul className="list-disc list-inside text-neutral-700 mb-6 space-y-2">
-                  <li>Create calendar events when pausing tasks</li>
-                  <li>Resume tasks based on scheduled times</li>
-                  <li>Sync task context with calendar</li>
-                  <li>Block focus time for active tasks</li>
+                <ul className="list-none text-dark-400 mb-6 space-y-3">
+                  <li className="flex items-center gap-3">
+                    <svg className="w-5 h-5 text-accent-purple flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+                    </svg>
+                    Create calendar events when pausing tasks
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <svg className="w-5 h-5 text-accent-blue flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+                    </svg>
+                    Resume tasks based on scheduled times
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <svg className="w-5 h-5 text-accent-pink flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+                    </svg>
+                    Sync task context with calendar
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <svg className="w-5 h-5 text-accent-cyan flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+                    </svg>
+                    Block focus time for active tasks
+                  </li>
                 </ul>
 
-                <div className="space-y-3">
+                <div className="space-y-4">
                   <button
                     onClick={handleGoogleCalendarAuth}
                     className="
-                      w-full px-6 py-3
-                      bg-accent text-white font-semibold
-                      hover:bg-accent/90
-                      transition-colors duration-150
-                      flex items-center justify-center gap-2
+                      w-full px-8 py-4
+                      bg-gradient-to-r from-accent-purple to-accent-blue
+                      text-white font-bold text-lg
+                      rounded-xl
+                      hover:scale-105 hover:shadow-lg hover:shadow-accent-purple/50
+                      active:scale-95
+                      transition-all duration-200
+                      flex items-center justify-center gap-3
+                      glow-button
                     "
                   >
-                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                    <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                       <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                       <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
@@ -148,11 +185,10 @@ const CalendarIntegrationInner = () => {
                     onClick={() => alert('Outlook integration coming soon!')}
                     className="
                       w-full px-6 py-3
-                      bg-white text-neutral-700 font-medium
-                      border border-neutral-300
-                      hover:border-neutral-400
-                      transition-colors duration-150
+                      glass-card rounded-lg
+                      text-dark-600 font-medium
                       opacity-50 cursor-not-allowed
+                      transition-all duration-200
                     "
                     disabled
                   >
@@ -163,9 +199,9 @@ const CalendarIntegrationInner = () => {
                     onClick={() => setShowModal(false)}
                     className="
                       w-full px-6 py-3
-                      text-neutral-600
-                      hover:text-neutral-800
-                      transition-colors duration-150
+                      text-dark-500 hover:text-white
+                      transition-colors duration-200
+                      font-semibold
                     "
                   >
                     Cancel
@@ -183,7 +219,7 @@ const CalendarIntegrationInner = () => {
 export const CalendarIntegration = () => {
   if (!GOOGLE_CONFIG.clientId) {
     return (
-      <div className="px-4 py-2 text-sm text-neutral-500 border border-neutral-300">
+      <div className="px-5 py-3 text-sm text-dark-600 glass-card rounded-lg">
         📅 Calendar (Setup Required)
       </div>
     );
