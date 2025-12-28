@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import type { Task, TaskStatus, Context } from './types';
+import { calendarService } from './services/calendar';
 
 interface TaskStore {
   tasks: Task[];
@@ -18,6 +19,7 @@ interface TaskStore {
     audioTranscript?: string,
     screenshot?: string
   ) => void;
+  syncTaskWithCalendar: (taskId: string, resumeTime?: Date) => Promise<void>;
   selectTask: (taskId: string | null) => void;
   setShowContextCapture: (show: boolean) => void;
   loadTasks: () => void;
@@ -88,6 +90,54 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
       ),
     }));
     get().saveTasks();
+  },
+
+  syncTaskWithCalendar: async (taskId: string, resumeTime?: Date) => {
+    if (!calendarService.isAuthenticated()) {
+      console.log('Calendar not connected, skipping sync');
+      return;
+    }
+
+    const task = get().tasks.find((t) => t.id === taskId);
+    if (!task) return;
+
+    try {
+      // If pausing task and resume time is specified, create calendar event
+      if (task.status === 'paused' && resumeTime) {
+        const latestContext = task.contexts[task.contexts.length - 1];
+        const event = await calendarService.createEvent({
+          title: `Resume: ${task.title}`,
+          description: latestContext?.note || 'Task context',
+          startTime: resumeTime,
+          durationMinutes: 30,
+        });
+
+        // Update task with calendar event ID and auto-resume time
+        set((state) => ({
+          tasks: state.tasks.map((t) =>
+            t.id === taskId
+              ? { 
+                  ...t, 
+                  calendarEventId: event.id,
+                  autoResumeTime: resumeTime,
+                  lastModified: new Date() 
+                }
+              : t
+          ),
+        }));
+        get().saveTasks();
+        console.log('Created calendar event:', event.id);
+      }
+      
+      // If completing task, delete associated calendar event
+      if (task.status === 'completed' && task.calendarEventId) {
+        await calendarService.deleteEvent(task.calendarEventId);
+        console.log('Deleted calendar event:', task.calendarEventId);
+      }
+    } catch (error) {
+      console.error('Failed to sync with calendar:', error);
+      // Don't fail the task operation if calendar sync fails
+    }
   },
 
   selectTask: (taskId: string | null) => {
